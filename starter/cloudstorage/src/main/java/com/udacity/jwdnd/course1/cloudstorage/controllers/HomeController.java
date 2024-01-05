@@ -1,9 +1,12 @@
 package com.udacity.jwdnd.course1.cloudstorage.controllers;
 
+import com.udacity.jwdnd.course1.cloudstorage.models.CredentialModel;
 import com.udacity.jwdnd.course1.cloudstorage.models.NoteModel;
+import com.udacity.jwdnd.course1.cloudstorage.persistence.entities.Credentials;
 import com.udacity.jwdnd.course1.cloudstorage.persistence.entities.Notes;
 import com.udacity.jwdnd.course1.cloudstorage.persistence.entities.Users;
 import com.udacity.jwdnd.course1.cloudstorage.persistence.mappers.NotesMapper;
+import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
 import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -23,18 +26,22 @@ import java.util.List;
 @RequestMapping(value = "/home")
 @RequiredArgsConstructor
 public class HomeController {
-    /*
-    The controllers you write should also be responsible for determining what, if any, error messages the application displays to the user.
-     */
 
     private final NoteService noteService;
+    private final CredentialService credentialService;
     public final Logger logger = LoggerFactory.getLogger(HomeController.class);
     @GetMapping
-    public String homeView(Authentication authentication, @ModelAttribute("noteForm") NoteModel noteModel, Model model) {
+    public String homeView(Authentication authentication,
+                           @ModelAttribute("noteForm") NoteModel noteModel,
+                           @ModelAttribute("credentialsForm") CredentialModel credentialModel,
+                           Model model) {
         logger.debug("authentication value {}", authentication.getName());
         List<Notes> notes = noteService.getUserNotes(authentication.getName());
         logger.debug("notes list {}", notes);
         model.addAttribute("notes", notes);
+        List<CredentialModel> credentials = credentialService.getUserCredentials(authentication.getName());
+        logger.debug("credentials list {}", credentials);
+        model.addAttribute("cloudCredentials", credentials);
         return "home";
     }
 
