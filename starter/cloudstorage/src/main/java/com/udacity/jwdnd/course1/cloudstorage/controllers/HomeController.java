@@ -1,14 +1,12 @@
 package com.udacity.jwdnd.course1.cloudstorage.controllers;
 
 import com.udacity.jwdnd.course1.cloudstorage.models.CredentialModel;
+import com.udacity.jwdnd.course1.cloudstorage.models.FileModel;
 import com.udacity.jwdnd.course1.cloudstorage.models.NoteModel;
-import com.udacity.jwdnd.course1.cloudstorage.persistence.entities.Credentials;
 import com.udacity.jwdnd.course1.cloudstorage.persistence.entities.Notes;
-import com.udacity.jwdnd.course1.cloudstorage.persistence.entities.Users;
-import com.udacity.jwdnd.course1.cloudstorage.persistence.mappers.NotesMapper;
 import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
+import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
-import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,19 +27,22 @@ public class HomeController {
 
     private final NoteService noteService;
     private final CredentialService credentialService;
+    private final FileService fileService;
     public final Logger logger = LoggerFactory.getLogger(HomeController.class);
     @GetMapping
     public String homeView(Authentication authentication,
                            @ModelAttribute("noteForm") NoteModel noteModel,
                            @ModelAttribute("credentialsForm") CredentialModel credentialModel,
+                           @ModelAttribute("filesFrom") FileModel fileModel,
                            Model model) {
-        logger.debug("authentication value {}", authentication.getName());
         List<Notes> notes = noteService.getUserNotes(authentication.getName());
-        logger.debug("notes list {}", notes);
         model.addAttribute("notes", notes);
+
         List<CredentialModel> credentials = credentialService.getUserCredentials(authentication.getName());
-        logger.debug("credentials list {}", credentials);
         model.addAttribute("cloudCredentials", credentials);
+
+        List<FileModel> files = fileService.getUserFiles(authentication.getName());
+        model.addAttribute("files", files);
         return "home";
     }
 

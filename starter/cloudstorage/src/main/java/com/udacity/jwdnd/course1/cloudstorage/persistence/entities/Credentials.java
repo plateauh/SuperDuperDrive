@@ -11,15 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Credentials {
-
-    /**
-     * credentialid INT PRIMARY KEY auto_increment,
-     *     url VARCHAR(100),
-     *     username VARCHAR (30),
-     *     key VARCHAR,
-     *     password VARCHAR,
-     *     userid INT
-     */
     private Integer credentialid;
     private String url;
     private String username;

@@ -3,7 +3,7 @@ package com.udacity.jwdnd.course1.cloudstorage.services;
 import com.udacity.jwdnd.course1.cloudstorage.models.NoteModel;
 import com.udacity.jwdnd.course1.cloudstorage.persistence.entities.Notes;
 import com.udacity.jwdnd.course1.cloudstorage.persistence.entities.Users;
-import com.udacity.jwdnd.course1.cloudstorage.persistence.mappers.NotesMapper;
+import com.udacity.jwdnd.course1.cloudstorage.persistence.mappers.NoteMapper;
 import com.udacity.jwdnd.course1.cloudstorage.persistence.mappers.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NoteService {
 
-    private final NotesMapper notesMapper;
+    private final NoteMapper noteMapper;
     private final UserMapper userMapper;
     public final Logger logger = LoggerFactory.getLogger(NoteService.class);
 
@@ -27,10 +27,10 @@ public class NoteService {
         Users user = userMapper.getUser(username);
         Notes note = new Notes(noteModel.getId(), noteModel.getTitle(), noteModel.getDescription(), user.getUserid());
         if (note.getNoteid() != null) {
-            notesMapper.updateNote(note);
+            noteMapper.updateNote(note);
             logger.info("Note updated:");
         } else {
-            int notesAdded = notesMapper.insertNote(note);
+            int notesAdded = noteMapper.insertNote(note);
             if (notesAdded > 0) {
                 logger.info("Note added: {}", notesAdded);
             }
@@ -45,11 +45,11 @@ public class NoteService {
         Users user = userMapper.getUser(username);
         logger.info("getting user {} notes...", username);
         logger.debug("user.getUserid() {}", user.getUserid());
-        return notesMapper.getNotes(user.getUserid());
+        return noteMapper.getNotes(user.getUserid());
     }
 
     public void deleteNote(Integer noteId) {
-        int deletedId = notesMapper.deleteNote(noteId);
+        int deletedId = noteMapper.deleteNote(noteId);
         if (deletedId > 0)
             logger.info("note {} deleted", noteId);
         else {

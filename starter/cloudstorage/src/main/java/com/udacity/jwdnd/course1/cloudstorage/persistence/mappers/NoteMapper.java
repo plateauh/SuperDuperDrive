@@ -9,7 +9,7 @@ import java.util.List;
  * @author Najed Alseghair at 1/3/2024
  */
 @Mapper
-public interface NotesMapper {
+public interface NoteMapper {
     @Select("SELECT * FROM NOTES WHERE userid = #{userid}")
     List<Notes> getNotes(Integer userid);
 
