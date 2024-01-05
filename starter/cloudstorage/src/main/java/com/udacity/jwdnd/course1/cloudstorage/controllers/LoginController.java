@@ -10,9 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/login")
 public class LoginController {
-    /*
-        The controllers you write should also be responsible for determining what, if any, error messages the application displays to the user.
-         */
     @GetMapping
     public String loginView() {
         return "login";

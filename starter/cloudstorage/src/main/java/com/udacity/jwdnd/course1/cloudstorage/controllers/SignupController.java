@@ -31,10 +31,11 @@ public class SignupController {
         try {
             userService.signup(user);
             model.addAttribute("signupSuccess", true);
+            return "login";
         } catch (RuntimeException e) {
             model.addAttribute("signupError", e.getMessage());
+            return "signup";
         }
-        return "signup";
     }
 
 }
