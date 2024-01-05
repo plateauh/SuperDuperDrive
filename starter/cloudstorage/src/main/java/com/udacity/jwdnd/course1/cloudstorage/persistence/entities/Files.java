@@ -14,11 +14,11 @@ public class Files {
     private Integer fileId;
     private String filename;
     private String contenttype;
-    private String filesize;
+    private Long filesize;
     private Integer userid;
     private byte[] filedata;
 
-    public Files(String filename, String contenttype, String filesize, Integer userid, byte[] filedata) {
+    public Files(String filename, String contenttype, Long filesize, Integer userid, byte[] filedata) {
         this.filename = filename;
         this.contenttype = contenttype;
         this.filesize = filesize;

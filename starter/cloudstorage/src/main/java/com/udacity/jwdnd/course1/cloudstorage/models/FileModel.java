@@ -9,6 +9,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class FileModel {
+    private Integer id;
     private String name;
     private byte[] data;
 }

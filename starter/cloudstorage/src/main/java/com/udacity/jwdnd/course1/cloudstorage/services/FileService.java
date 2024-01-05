@@ -50,15 +50,34 @@ public class FileService {
         logger.info("getting user {} files...", username);
         List<Files> files = fileMapper.getFiles(user.getUserid());
         List<FileModel> fileModels = new ArrayList<>();
-        files.forEach(file -> fileModels.add(new FileModel(file.getFilename(), file.getFiledata())));
+        files.forEach(file -> fileModels.add(new FileModel(file.getFileId(), file.getFilename(), file.getFiledata())));
         return fileModels;
+    }
+
+    public void deleteFile(Integer fileId) {
+        int deletedId = fileMapper.deleteFile(fileId);
+        if (deletedId > 0)
+            logger.info("file {} deleted", fileId);
+        else {
+            logger.error("error in deleting file {}", fileId);
+            throw new RuntimeException("Error in deleting file");
+        }
+    }
+
+    public Files getFile(Integer fileid) {
+        Files file = fileMapper.getFileById(fileid);
+        if (file == null) {
+            logger.error("file {} not found", fileid);
+            throw new RuntimeException("file not found");
+        }
+        return file;
     }
 
     private Files mapFile(MultipartFile fileModel, String username) throws IOException {
         Users user = userMapper.getUser(username);
         return new Files(fileModel.getOriginalFilename(),
                 fileModel.getContentType(),
-                String.valueOf(fileModel.getSize()),
+                fileModel.getSize(),
                 user.getUserid(),
                 fileModel.getBytes());
     }
