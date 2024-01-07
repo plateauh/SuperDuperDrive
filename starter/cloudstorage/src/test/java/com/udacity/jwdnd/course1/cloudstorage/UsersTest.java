@@ -6,13 +6,19 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.server.LocalServerPort;
 
 /**
  * @author Najed Alseghair at 1/1/2024
  */
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UsersTest {
-
+    
+    @LocalServerPort
+    private int port;
     private WebDriver driver;
     private static final int timeoutInSec = 2;
 
@@ -38,7 +44,15 @@ public class UsersTest {
      */
     @Test
     public void testUnauthorizedUser() {
+        driver.get("http://localhost:" + this.port + "/login");
+        boolean loginAccessibility = driver.getTitle().equals("Login");
 
+        driver.get("http://localhost:" + this.port + "/signup");
+        boolean signupAccessibility = driver.getTitle().equals("Sign Up");
+
+        driver.get("http://localhost:" + this.port + "/home");
+        boolean homeInaccessibility = driver.getTitle().equals("Login");
+        Assertions.assertTrue(loginAccessibility && signupAccessibility && homeInaccessibility);
     }
 
     /*
@@ -50,23 +64,23 @@ public class UsersTest {
         boolean signUpSuccess = driver.findElement(By.id("success-msg")).getText().contains("You successfully signed up!");
 
         login();
-        boolean loginSuccess = driver.getTitle().equals("Login");
+        boolean loginSuccess = driver.getTitle().equals("Home");
 
         logout();
-        driver.get("http://localhost:8080/home");
-        boolean logoutSuccess = true; // TODO verify the inaccessibility of homepage
+        driver.get("http://localhost:" + this.port + "/home");
+        boolean logoutSuccess = driver.getTitle().equals("Login");
         Assertions.assertTrue(signUpSuccess && loginSuccess && logoutSuccess);
     }
 
     private void logout() {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSec);
-        wait.until(webDriver -> webDriver.findElement(By.id("logoutDiv")));
-        WebElement logoutButton = driver.findElement(By.id("logoutDiv"));
+        wait.until(webDriver -> webDriver.findElement(By.id("logout")));
+        WebElement logoutButton = driver.findElement(By.id("logout"));
         logoutButton.click();
     }
 
     private void login() {
-        driver.get("http://localhost:8080/login");
+        driver.get("http://localhost:" + this.port + "/login");
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSec);
 
         // username
@@ -88,7 +102,7 @@ public class UsersTest {
     }
 
     private void signup() {
-        driver.get("http://localhost:8080/signup");
+        driver.get("http://localhost:" + this.port + "/signup");
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSec);
 
         // first name

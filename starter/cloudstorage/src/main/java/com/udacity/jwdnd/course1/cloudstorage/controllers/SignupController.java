@@ -10,28 +10,28 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 /**
  * @author Najed Alseghair at 1/1/2024
  */
 @Controller
-@RequestMapping(value = "/signup")
+@RequestMapping
 @RequiredArgsConstructor
 public class SignupController {
-    /*
-    The controllers you write should also be responsible for determining what, if any, error messages the application displays to the user.
-     */
-
     private final UserService userService;
-    @GetMapping
-    public String signupView() {
+    @GetMapping("/signup")
+    public String signupView(@ModelAttribute("userForm") Users user) {
         return "signup";
     }
-    @PostMapping
-    public String signup(@ModelAttribute Users user, Model model) {
+    @PostMapping("/signup")
+    public String signup(@ModelAttribute("userForm") Users user, Model model, HttpServletRequest request) {
         try {
             userService.signup(user);
-            model.addAttribute("signupSuccess", true);
-            return "login";
+            HttpSession httpSession = request.getSession();
+            httpSession.setAttribute("signupSuccess", true);
+            return "redirect:/login";
         } catch (RuntimeException e) {
             model.addAttribute("signupError", e.getMessage());
             return "signup";
