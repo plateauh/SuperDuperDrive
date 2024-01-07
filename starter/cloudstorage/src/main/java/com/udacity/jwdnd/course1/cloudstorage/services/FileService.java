@@ -26,6 +26,7 @@ public class FileService {
     public final Logger logger = LoggerFactory.getLogger(FileService.class);
 
     public void addFile(MultipartFile multipartFile, String username) {
+        if (multipartFile.isEmpty()) throw new RuntimeException("Please select a file to upload");
         Files file;
         try {
             file = mapFile(multipartFile, username);

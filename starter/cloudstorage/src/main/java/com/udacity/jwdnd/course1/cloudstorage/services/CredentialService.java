@@ -6,6 +6,7 @@ import com.udacity.jwdnd.course1.cloudstorage.persistence.entities.Users;
 import com.udacity.jwdnd.course1.cloudstorage.persistence.mappers.CredentialMapper;
 import com.udacity.jwdnd.course1.cloudstorage.persistence.mappers.UserMapper;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.validator.routines.UrlValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -71,6 +72,12 @@ public class CredentialService {
     }
 
     private Credentials mapCredentials(CredentialModel model, String username) {
+        // taken from https://commons.apache.org/proper/commons-validator/apidocs/org/apache/commons/validator/routines/UrlValidator.html
+        UrlValidator urlValidator = new UrlValidator();
+        if (!urlValidator.isValid(model.getUrl())) {
+            logger.error("Invalid URL: {}", model.getUrl());
+            throw new RuntimeException("Invalid URL: " + model.getUrl());
+        }
         Users user = userMapper.getUser(username);
         String password = encryptionService.encryptValue(model.getPassword(), "najdmohammedalse");
         return new Credentials(model.getId(), model.getUrl(), model.getUsername(), password, "najdmohammedalse", user.getUserid());

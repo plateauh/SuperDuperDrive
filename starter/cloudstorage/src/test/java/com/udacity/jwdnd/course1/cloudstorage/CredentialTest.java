@@ -55,7 +55,7 @@ public class CredentialTest {
             throw new RuntimeException(e);
         }
         addCredentialsBtn.click();
-        fillCredentialsForm(wait, "x.com", "user", "123");
+        fillCredentialsForm(wait, "http://www.x.com", "user", "123");
         navigateToCredentialsTab(wait);
 
         wait.until(webDriver -> webDriver.findElement(By.id("cr-url")));
@@ -66,7 +66,7 @@ public class CredentialTest {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        Assertions.assertTrue(urlHead.getText().equals("x.com") && !passwordHead.getText().equals("123"));
+        Assertions.assertTrue(urlHead.getText().equals("http://www.x.com") && !passwordHead.getText().equals("123"));
         deleteCredentials(wait);
         navigateToCredentialsTab(wait);
     }
@@ -85,7 +85,7 @@ public class CredentialTest {
             throw new RuntimeException(e);
         }
         addCredentialsBtn.click();
-        fillCredentialsForm(wait, "old-url.com", "old_user", "123");
+        fillCredentialsForm(wait, "http://www.old-url.com", "old_user", "123");
         navigateToCredentialsTab(wait);
 
         wait.until(webDriver -> webDriver.findElement(By.id("editCredentialBtn")));
@@ -107,7 +107,7 @@ public class CredentialTest {
 
         boolean isPasswordUnencrypted = passwordInput.getAttribute("value").equals("123");
 
-        fillCredentialsForm(wait, "new-url.com", "new_user", "456");
+        fillCredentialsForm(wait, "http://www.new-url.com", "new_user", "456");
         navigateToCredentialsTab(wait);
 
         wait.until(webDriver -> webDriver.findElement(By.id("cr-url")));
@@ -120,7 +120,7 @@ public class CredentialTest {
         }
 
         Assertions.assertTrue(isPasswordUnencrypted
-                && urlHead.getText().equals("new-url.com")
+                && urlHead.getText().equals("http://www.new-url.com")
                 && userHead.getText().equals("new_user"));
         deleteCredentials(wait);
         navigateToCredentialsTab(wait);
@@ -140,7 +140,7 @@ public class CredentialTest {
             throw new RuntimeException(e);
         }
         addCredentialsBtn.click();
-        fillCredentialsForm(wait, "url.com", "user", "123");
+        fillCredentialsForm(wait, "http://www.url.com", "user", "123");
         navigateToCredentialsTab(wait);
         try {
             Thread.sleep(1000);
@@ -149,7 +149,7 @@ public class CredentialTest {
         }
         deleteCredentials(wait);
 
-        Assertions.assertFalse(driver.getPageSource().contains("url.com"));
+        Assertions.assertFalse(driver.getPageSource().contains("http://www.url.com"));
     }
 
     private void signup() {

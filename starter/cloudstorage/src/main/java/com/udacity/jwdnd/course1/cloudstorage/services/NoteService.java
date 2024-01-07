@@ -26,6 +26,8 @@ public class NoteService {
     public void addNote(NoteModel noteModel, String username) {
         Users user = userMapper.getUser(username);
         Notes note = new Notes(noteModel.getId(), noteModel.getTitle(), noteModel.getDescription(), user.getUserid());
+        int countNote = noteMapper.countNotes(noteModel.getTitle(), noteModel.getDescription(), user.getUserid());
+        if (countNote > 0) throw new RuntimeException("You already have a note with the same title and description");
         if (note.getNoteid() != null) {
             noteMapper.updateNote(note);
             logger.info("Note updated:");
